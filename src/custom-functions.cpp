@@ -6,6 +6,7 @@ vex::timer myTimer; //Create a timer for the program
 const double wheelCircumference = 4 * M_PI; //Circumference of the wheel
 const double gearRatio = 1.5; //Gear ratio of the drive
 const double percentToMVolts = 120;
+const double deltaTime = 10; //Time between each loop of the PID loop
 
 bool accelerationCompleted;
 bool runCompleted;
@@ -21,16 +22,20 @@ double distanceErrorDerivative;
 double baseVelocityRatio;
 double errorVelocity;
 
-double distanceRequired;
-double kI;
+//turn variables
 double kP;
+double kI;
 double kD;
 double error;
-double previousError;
+double prevError;
+double targetAngle;
+double currentOrientation;
 double integral;
 double derivative;
-
-
+double speedL;
+double speedR;
+double settlingDist;
+bool leftTurn;
 
 double valueRotation;
 
@@ -258,28 +263,28 @@ void resetTimer(){
 
 double getHeading(){
                     
-    return InertialSensor.heading();
+    return gyroscope.heading();
 
 }
 
 double getRoll(){
         
-    return InertialSensor.roll();
+    return gyroscope.roll();
 
 }
 
 void resetHeading(){
         
-    InertialSensor.resetHeading();
+    gyroscope.setHeading(0.1, rotationUnits::deg); // 0.1 to avoid 0/360 glitch
 
 }
 
 void pregameCalibrate(){
 
-    InertialSensor.calibrate();
+    gyroscope.calibrate();
     
 
-    while (InertialSensor.isCalibrating()) {
+    while (gyroscope.isCalibrating()) {
 
         this_thread::sleep_for(100);
 
@@ -383,5 +388,68 @@ void alertRumble(bool rapidFire){
 
     }
 
+
+}
+
+void resetTurnVariables(){
+
+    error = 0;
+    prevError = 0;
+    targetAngle = 0;
+    currentOrientation = 0;
+    integral = 0;
+    derivative = 0;
+    speedL = 0;
+    speedR = 0;
+    leftTurn = false;
+
+}
+
+void startTurn(double Target, double settleDist, double p, double i, double d){
+
+    resetTurnVariables();
+    resetHeading();
+    targetAngle = Target;
+
+    settlingDist = settleDist;
+
+    kP = p;
+    kI = i;
+    kD = d;
+
+    if (p == 0 && i == 0 && d == 0) {
+
+        if(fabs(targetAngle) <= 90) {  //Small turn
+            kP = 0.09;
+            kI = 0;
+            kD = 0;
+        }
+
+        else if(fabs(targetAngle) > 90 && targetAngle <= 150) { //Medium turn
+            kP = 0.091;
+            kI = 0;
+            kD = 0;
+        }
+
+        else { // Long Turn
+            kP = 0.08421;
+            kI = 0;
+            kD = 0;
+        }
+
+    if(targetAngle < 0) { 
+        targetAngle = 360 - fabs(targetAngle);
+        gyroscope.setHeading(359.9, rotationUnits::deg); // 359.9 to avoid 0/360 glitch
+        leftTurn = true;
+    }
+
+    }
+}
+
+void turn(){
+
+    while (true){
+
+    }
 
 }

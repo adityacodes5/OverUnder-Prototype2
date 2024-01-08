@@ -47,6 +47,18 @@ void usercontrol(void) {
     autoDrive();
     moveArm();
 
+    if(Controller1.ButtonX.pressing()){
+
+      brakeDrive(hold);
+
+    }
+    
+    else if(!Controller1.ButtonX.pressing()){
+
+      brakeDrive(coast);
+
+    }
+
     if (timeElapsed(seconds) >= 75 && alertOnce30){
 
       alertRumble(false);

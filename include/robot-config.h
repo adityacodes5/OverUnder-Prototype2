@@ -17,7 +17,7 @@ extern motor LeftPush;
 extern motor Intake;
 extern motor kickerArm;
 
-extern inertial InertialSensor;
+extern inertial gyroscope;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
