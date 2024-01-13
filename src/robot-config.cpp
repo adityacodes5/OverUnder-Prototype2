@@ -20,8 +20,8 @@ motor RightPush = motor(PORT3, ratio18_1, true);
 motor LeftPush = motor(PORT9, ratio18_1, false);
 
 motor Intake = motor(PORT18, ratio18_1, false);
-motor kickerArm = motor(PORT2, ratio18_1, false);
-motor kiicker = motor(PORT10, ratio18_1, false);
+motor kickerArm = motor(PORT10, ratio18_1, false);
+motor kicker = motor(PORT2, ratio18_1, false);
 inertial gyroscope = inertial(PORT1);
 
 void vexcodeInit(void) {

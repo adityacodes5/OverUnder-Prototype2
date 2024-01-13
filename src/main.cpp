@@ -26,16 +26,44 @@ void pre_auton(void) {
   // Example: clearing encoders, setting servo positions, ...
 }
 
-
+bool yes = false;
 void autonomous(void) {
+  kickerArm.spinTo(545, degrees, 100, vex::velocityUnits::rpm);
+  while (1){
+      //add code to shoot
+    //kicker.stop(vex::brakeType::brake);
+    kicker.spin(vex::reverse, 100, vex::percentUnits::pct);
+    if(yes = true){
+      break;
+    }
+  }
+  double autonSpeed = 50*120;
+/*
+  setDrive(vex::forward, autonSpeed, autonSpeed);
 
+  wait(1500, msec);
+
+  brakeDrive(brake);
+
+  wait(1000, msec);
+
+  setDrive(vex::reverse, autonSpeed, autonSpeed);
+
+  wait(1500, msec);
+
+  brakeDrive(brake);
+
+  wait(1000, msec);
+
+  brakeDrive(coast);
+  */
 
 }
 
 
 
 void usercontrol(void) {
-
+/*
   int maxSpeed = 100*120;
   bool alertOnce30 = true;
   bool alertOnce15 = true;
@@ -93,6 +121,7 @@ void usercontrol(void) {
 
     wait(20, msec);
   }
+  */
 }
 
 //
