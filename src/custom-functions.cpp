@@ -5,13 +5,24 @@ vex::timer myTimer; //Create a timer for the program
 
 const double wheelCircumference = 4 * M_PI; //Circumference of the wheel
 const double gearRatio = 1.5; //Gear ratio of the drive
-const double percentToMVolts = 120;
-const double deltaTime = 10; //Time between each loop of the PID loop
+const int percentToMVolts = 120;
+const int deltaTime = 10; //Time between each loop of the PID loop
+const int maxVoltage = 12000; //Max voltage of the motor
+const int delayTime = 10;
 
 bool accelerationCompleted;
 bool runCompleted;
 bool decelerationCompleted;
 
+double currentRotationBackL;
+double currentRotationMiddleL;
+double currentRotationFrontL; 
+
+double currentRotationBackR;
+double currentRotationMiddleR;
+double currentRotationFrontR;
+
+double averageRotation;
 double degreesToTurn;
 double distanceInches;
 double averageDriveRotation;
@@ -36,6 +47,7 @@ double speedL;
 double speedR;
 double settlingDist;
 bool leftTurn;
+bool enableTurn;
 
 double valueRotation;
 
@@ -74,13 +86,16 @@ void gearboxR(directionType direction, double velocity){ //Movement group for ju
 
 void move(directionType direction, double velocityL, double velocityR){ //Movement group for entire drive
 
-    gearboxL(direction, velocityL);
-    gearboxR(direction, velocityR);
+    GearboxLF.spin(direction, velocityL, velocityUnits::pct);
+    GearboxLB.spin(direction, velocityL, velocityUnits::pct);
+    GearboxRF.spin(direction, velocityR, velocityUnits::pct);
+    GearboxRB.spin(direction, velocityR, velocityUnits::pct);
 
     RightPush.spin(direction, velocityR, velocityUnits::pct);
     LeftPush.spin(direction, velocityL, velocityUnits::pct);
 
 }
+
 
 void moveUntil(double degrees, double motorVelocity, bool waitForCompletion){ //Move Drive until a certain degree
 
@@ -127,9 +142,56 @@ double calculateAverageMotorRotation(){
 
 }
 
-void moveInches(double inchesToTurn, double motorVelocity, bool forward){ //Move Drive a set amount of inches.
+void oldMoveInches(double inchesToTurn, double motorVelocity){
+    GearboxLB.resetPosition(); //Reset the back left motor's rotation
+    GearboxLF.resetPosition(); //Reset the middle left motor's rotation
+    GearboxRB.resetPosition(); //Reset the front left motor's rotation
+
+    GearboxRF.resetPosition(); //Reset the back right motor's rotation
+    LeftPush.resetPosition(); //Reset the middle right motor's rotation
+    RightPush.resetPosition(); //Reset the front right motor's rotation
+
+    int i;
+
+    
+    averageRotation = 0; //Declare average rotation variable
+    degreesToTurn = (inchesToTurn / wheelCircumference) * (360/gearRatio); //Find the number of degrees to turn by dividing the inches to turn by the circumference of the wheel and multiplying by 360. Use negative distance and velocity if going backward
+
+    while (fabs(RightPush.position(rotationUnits::deg)) <= fabs(degreesToTurn)){//*NOTE*: change degreesToTurn back to averageRotation when all the motor values have the same sign
+        currentRotationBackL = GearboxLB.position(rotationUnits::deg); //Get the current rotation of the back left motor
+        currentRotationMiddleL = GearboxLF.position(rotationUnits::deg); //Get the current rotation of the middle left motor
+        currentRotationFrontL = GearboxRB.position(rotationUnits::deg); //Get the current rotation of the front left motor
+
+        currentRotationBackR = GearboxRF.position(rotationUnits::deg); //Get the current rotation of the back right motor
+        currentRotationMiddleR = LeftPush.position(rotationUnits::deg); //Get the current rotation of the middle right motor
+        currentRotationFrontR = RightPush.position(rotationUnits::deg); //Get the current rotation of the front right motor
+
+        averageRotation = (currentRotationBackL + currentRotationMiddleL + currentRotationFrontL + currentRotationBackR + currentRotationMiddleR + currentRotationFrontR) / 6; //Find the average rotation of all 6 motors
+
+        GearboxLB.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+        GearboxLF.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+        LeftPush.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+
+        GearboxRB.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+        GearboxRF.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+        RightPush.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+
+
+        if (RightPush.position(rotationUnits::deg) > degreesToTurn){
+            brakeDrive(coast);
+            break;
+        }
+        
+    }
+}
+
+void moveInches(double inchesToTurn, double motorVelocity, bool waitForCompletion, bool forward){ //Move Drive a set amount of inches.
 
     degreesToTurn = inchesToDegrees(inchesToTurn);
+
+    if (forward){
+        degreesToTurn = degreesToTurn * -1;
+    }
 
     while(calculateAverageMotorRotation() < degreesToTurn){
 
@@ -212,6 +274,7 @@ void moveInchesPID(double inchesToTurn, double motorVelocity, bool forward){ //M
             break;
 
         }
+
         
     }
 
@@ -245,7 +308,7 @@ void moveInchesPID(double inchesToTurn, double motorVelocity, bool forward){ //M
 
     }
 
-    brakeDrive(coast);
+    brakeDrive(hold);
 
 }
 
@@ -292,7 +355,7 @@ void pregameCalibrate(){
 
 }
 
-void autoDrive(){
+bool autoDrive(){
     
     leftAxisPCT = Controller1.Axis3.position(percent) + Controller1.Axis4.position(percent);
     leftAxismV = leftAxisPCT * percentToMVolts;
@@ -320,15 +383,18 @@ void autoDrive(){
 
     if (abs(rightAxisPCT) > 5 || abs(leftAxisPCT) > 5){
 
-        move(fwd, leftAxismV, rightAxismV);
+        move(fwd, leftAxisPCT, rightAxisPCT);
+        return true;
 
     }
 
     else{
 
         brakeDrive(brake);
+        return false;
 
     }
+
     
 
 }
@@ -355,10 +421,36 @@ void grabTriball(double velocity_mV, bool outTake){ //Spin intake to grab ball, 
 
 }
 
+void kick(double velocity_pct, bool pullBack){ //Spin kicker to kick ball, or "pullBack" (reverse) to fix if it is stuck
+
+    kicker.setMaxTorque(100, percent);
+
+    if (!pullBack){
+
+        kicker.spin(fwd, velocity_pct, percentUnits::pct);
+
+    }
+
+    else if (pullBack){
+
+        kicker.spin(reverse, velocity_pct, percentUnits::pct);
+
+    }
+    
+    else if (velocity_pct == 0) {
+
+        kicker.stop(coast);
+
+    }
+
+}
+
 void moveArm(){
 
     armAxisPCT = Controller1.Axis2.position(percent);
     armAxismV = armAxisPCT * percentToMVolts;
+
+    kickerArm.setMaxTorque(100,percentUnits::pct);
 
     if (abs(armAxisPCT) > 5){
 
@@ -368,7 +460,7 @@ void moveArm(){
 
     else{
 
-        kickerArm.stop(brake);
+        kickerArm.stop(hold);
 
     }
 
@@ -441,15 +533,82 @@ void startTurn(double Target, double settleDist, double p, double i, double d){
         targetAngle = 360 - fabs(targetAngle);
         gyroscope.setHeading(359.9, rotationUnits::deg); // 359.9 to avoid 0/360 glitch
         leftTurn = true;
+        }
+
     }
 
+    enableTurn = true;
+
+    while(enableTurn){
+        
+        currentOrientation = getHeading();
+
+        error = targetAngle - currentOrientation;
+        integral += error*deltaTime;
+        derivative = (error - prevError)/deltaTime;
+        prevError = error;
+
+        speedL = (error*kP) + (integral*kI) + (derivative*kD);
+        speedR = -1*((error*kP) + (integral*kI) + (derivative*kD));
+
+        if(speedL > maxVoltage){
+            speedL = copysign(maxVoltage, speedL);
+            speedR = copysign(maxVoltage, speedR);
+        }
+
+        move(fwd, speedL, speedR);
+
+        if(fabs(error) <= settlingDist){
+            brakeDrive(hold);
+            enableTurn = false;
+            break;
+        }
+
+        vexDelay(deltaTime);
+        
     }
 }
 
-void turn(){
+void matchLoadAuton(){ //bot is set backwards
+    move(directionType::rev, 72, 60);
+    vexDelay(1500);
+    brakeDrive(coast);
+    wait(250, msec);
+    move(directionType::fwd, 20, 20);
+    wait(500, msec);
+    move(directionType::rev, 80, 80);
+    wait(1000,msec);
+    move(fwd, 30, 30);
+    wait(1500, msec);
+    brakeDrive(coast);
+    kickerArm.spinTo(540, rotationUnits::deg, true);
+}
 
-    while (true){
+void closeSideAuton(){ //bot is set forwards
+    move(fwd, 60, 72);
+    vexDelay(1500);
+    brakeDrive(coast);
+    wait(500, msec);
+    grabTriball(100*120, true);
+    move(fwd, 20, 20);
+    wait(1000, msec);
+    grabTriball(0, true);
+    brakeDrive(coast);
+    wait(500, msec);   
+    move(directionType::rev, 20, 20);
+    wait(500, msec);
+    move(fwd, 80, 80);
+    wait(1000,msec);
+    move(directionType::rev, 30, 30);
+    wait(1000, msec);
+    brakeDrive(coast);
+}
 
+void setWings(){
+    if(wings.value() == 1){
+        wings.set(false);
     }
-
+    else{
+        wings.set(true);
+    }
 }

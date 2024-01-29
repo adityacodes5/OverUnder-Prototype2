@@ -16,6 +16,9 @@ extern motor LeftPush;
 
 extern motor Intake;
 extern motor kickerArm;
+extern motor kicker;
+
+extern digital_out wings;
 
 extern inertial gyroscope;
 
