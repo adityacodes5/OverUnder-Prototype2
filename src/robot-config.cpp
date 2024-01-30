@@ -9,15 +9,15 @@ brain Brain;
 controller Controller1;
 
 //Drive motors. 11 Watt motors
-motor GearboxRF = motor(PORT9, ratio18_1, false);
-motor GearboxRB = motor(PORT6, ratio18_1, true);
+motor GearboxLF = motor(PORT9, ratio18_1, true);
+motor GearboxLB = motor(PORT6, ratio18_1, false);
 
-motor GearboxLF = motor(PORT17, ratio18_1, true);
-motor GearboxLB = motor(PORT15, ratio18_1, false);
+motor GearboxRF = motor(PORT17, ratio18_1, false);
+motor GearboxRB = motor(PORT15, ratio18_1, true);
 
 //5.5 Watt Drive motors
-motor RightPush = motor(PORT3, ratio18_1, false);
-motor LeftPush = motor(PORT11, ratio18_1, true);
+motor LeftPush = motor(PORT3, ratio18_1, true);
+motor RightPush = motor(PORT11, ratio18_1, false);
 
 motor Intake = motor(PORT18, ratio18_1, false);
 motor kickerArm = motor(PORT14, ratio18_1, false);

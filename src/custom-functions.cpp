@@ -169,6 +169,36 @@ void oldMoveInches(double inchesToTurn, double motorVelocity) {
     brakeDrive(coast); //happens after while statement has been meet 
 }
 
+void turnDegrees(double degreesToTurn, double motorVelocity) {
+    // Reset motor positions
+    GearboxLB.resetPosition();
+    GearboxLF.resetPosition();
+    GearboxRB.resetPosition();
+    GearboxRF.resetPosition();
+    LeftPush.resetPosition();
+    RightPush.resetPosition();
+
+    // Calculate target position for turning in degrees
+    double targetPosition = degreesToTurn * (360.0 / wheelCircumference) * gearRatio;
+
+    // Set motors to turn to the target position
+    GearboxLB.spinTo(+targetPosition, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+    GearboxLF.spinTo(+targetPosition, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+    LeftPush.spinTo(+targetPosition, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+    GearboxRB.spinTo(-targetPosition, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+    GearboxRF.spinTo(-targetPosition, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+    RightPush.spinTo(-targetPosition, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+
+    // Wait for the motors to reach their targets
+    while (GearboxLB.isSpinning() || GearboxLF.isSpinning() || LeftPush.isSpinning() || GearboxRB.isSpinning() || GearboxRF.isSpinning() || RightPush.isSpinning()) {
+        //vex::task::sleep(20);
+    }
+    // Brake the motors
+    brakeDrive(coast);
+}
+
+
+
 void moveInches(double inchesToTurn, double motorVelocity, bool waitForCompletion, bool forward){ //Move Drive a set amount of inches.
 
     degreesToTurn = inchesToDegrees(inchesToTurn);

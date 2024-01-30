@@ -134,6 +134,10 @@ void usercontrol(void) {
       oldMoveInches(20, 100);       
     }
 
+    if (Controller1.ButtonB.pressing()){
+      turnDegrees(90, 10);
+    }
+
     else if (!Controller1.ButtonR2.pressing()){
 
       kick(0, true);
