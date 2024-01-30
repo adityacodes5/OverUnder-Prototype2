@@ -130,6 +130,10 @@ void usercontrol(void) {
 
     }
 
+    if (Controller1.ButtonA.pressing()){
+      oldMoveInches(20, 100);       
+    }
+
     else if (!Controller1.ButtonR2.pressing()){
 
       kick(0, true);

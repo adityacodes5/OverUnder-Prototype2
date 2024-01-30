@@ -142,47 +142,31 @@ double calculateAverageMotorRotation(){
 
 }
 
-void oldMoveInches(double inchesToTurn, double motorVelocity){
-    GearboxLB.resetPosition(); //Reset the back left motor's rotation
-    GearboxLF.resetPosition(); //Reset the middle left motor's rotation
-    GearboxRB.resetPosition(); //Reset the front left motor's rotation
+void oldMoveInches(double inchesToTurn, double motorVelocity) {
+    GearboxLB.resetPosition();
+    GearboxLF.resetPosition();
+    GearboxRB.resetPosition();
+    GearboxRF.resetPosition();
+    LeftPush.resetPosition();
+    RightPush.resetPosition();
 
-    GearboxRF.resetPosition(); //Reset the back right motor's rotation
-    LeftPush.resetPosition(); //Reset the middle right motor's rotation
-    RightPush.resetPosition(); //Reset the front right motor's rotation
+    degreesToTurn = (inchesToTurn / wheelCircumference) * (360 / gearRatio); //Find the number of degrees to turn by dividing the inches to turn by the circumference of the wheel and multiplying by 360. Use negative distance and velocity if going backward
+    averageRotation = 0;
 
-    int i;
+    GearboxLB.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+    GearboxLF.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+    LeftPush.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
 
-    
-    averageRotation = 0; //Declare average rotation variable
-    degreesToTurn = (inchesToTurn / wheelCircumference) * (360/gearRatio); //Find the number of degrees to turn by dividing the inches to turn by the circumference of the wheel and multiplying by 360. Use negative distance and velocity if going backward
+    GearboxRB.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+    GearboxRF.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
+    RightPush.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
 
-    while (fabs(RightPush.position(rotationUnits::deg)) <= fabs(degreesToTurn)){//*NOTE*: change degreesToTurn back to averageRotation when all the motor values have the same sign
-        currentRotationBackL = GearboxLB.position(rotationUnits::deg); //Get the current rotation of the back left motor
-        currentRotationMiddleL = GearboxLF.position(rotationUnits::deg); //Get the current rotation of the middle left motor
-        currentRotationFrontL = GearboxRB.position(rotationUnits::deg); //Get the current rotation of the front left motor
-
-        currentRotationBackR = GearboxRF.position(rotationUnits::deg); //Get the current rotation of the back right motor
-        currentRotationMiddleR = LeftPush.position(rotationUnits::deg); //Get the current rotation of the middle right motor
-        currentRotationFrontR = RightPush.position(rotationUnits::deg); //Get the current rotation of the front right motor
-
-        averageRotation = (currentRotationBackL + currentRotationMiddleL + currentRotationFrontL + currentRotationBackR + currentRotationMiddleR + currentRotationFrontR) / 6; //Find the average rotation of all 6 motors
-
-        GearboxLB.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
-        GearboxLF.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
-        LeftPush.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
-
-        GearboxRB.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
-        GearboxRF.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
-        RightPush.spinTo(degreesToTurn, rotationUnits::deg, motorVelocity, velocityUnits::pct, false);
-
-
-        if (RightPush.position(rotationUnits::deg) > degreesToTurn){
-            brakeDrive(coast);
-            break;
-        }
-        
+    // Wait for the motors to reach their targets
+    while (GearboxLB.isSpinning() || GearboxLF.isSpinning() || LeftPush.isSpinning() || GearboxRB.isSpinning() || GearboxRF.isSpinning() || RightPush.isSpinning()) {
+        //vex::task::sleep(20);
     }
+
+    brakeDrive(coast); //happens after while statement has been meet 
 }
 
 void moveInches(double inchesToTurn, double motorVelocity, bool waitForCompletion, bool forward){ //Move Drive a set amount of inches.
