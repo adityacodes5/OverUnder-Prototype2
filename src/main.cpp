@@ -174,7 +174,7 @@ void usercontrol(void) {
 
     if(Controller1.ButtonB.pressing()){
 
-      newTurn(-90);
+      newTurn(150);
 
     }
 

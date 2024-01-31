@@ -630,8 +630,8 @@ void newTurn(double targetAngle){
     while(enableTurn){
 
         error = targetAngle - getHeading();
-        speedL = targetAngle/3;
-        speedR = -targetAngle/3;
+        speedL = targetAngle/5;
+        speedR = -targetAngle/5;
 
         if(leftTurn){
 
@@ -649,13 +649,14 @@ void newTurn(double targetAngle){
             break;
             }
         }
+
         else if(!leftTurn){
             if (speedL < 5 && speedR > -5){
                 speedL = 5;
                 speedR = -5;
             }
             
-            if(error <= settlingDist){
+            if(error <= 1){
             brakeDrive(brake);
             enableTurn = false;
             break;
