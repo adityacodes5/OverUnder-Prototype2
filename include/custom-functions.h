@@ -28,4 +28,5 @@ extern void startTurn(double Target, double settleDist, double p, double i, doub
 extern void matchLoadAuton();
 extern void closeSideAuton();
 extern void setWings();
+extern void newTurn(double targetAngle);
 

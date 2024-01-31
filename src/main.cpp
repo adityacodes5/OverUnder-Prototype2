@@ -20,7 +20,7 @@ void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
 
-  //pregameCalibrate();
+  pregameCalibrate();
 
 
 
@@ -56,6 +56,7 @@ void usercontrol(void) {
   double test;
   bool driving;
   bool wingsTriggered;
+  bool armTriggered;
 
   resetTimer();
 
@@ -153,6 +154,30 @@ void usercontrol(void) {
         wingsTriggered = false;
       }
     }
+    if(armTriggered && Controller1.ButtonX.pressing() == false){
+      if(armHold.value() == false){
+        armHold.set(true);
+        armTriggered = false;
+      }
+
+      else if(armHold.value() == true){
+        armHold.set(false);
+        armTriggered = false;
+      }
+    }
+
+    if(Controller1.ButtonA.pressing()){
+
+      newTurn(90);
+
+    }
+
+    if(Controller1.ButtonB.pressing()){
+
+      newTurn(-90);
+
+    }
+
 
 
 

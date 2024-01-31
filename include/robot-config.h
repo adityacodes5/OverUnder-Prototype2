@@ -19,6 +19,7 @@ extern motor kickerArm;
 extern motor kicker;
 
 extern digital_out wings;
+extern digital_out armHold;
 
 extern inertial gyroscope;
 

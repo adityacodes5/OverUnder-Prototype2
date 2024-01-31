@@ -32,7 +32,7 @@ double distanceErrorToTurn;
 double distanceErrorDerivative;
 double baseVelocityRatio;
 double errorVelocity;
-
+double originalInput;
 //turn variables
 double kP;
 double kI;
@@ -611,4 +611,73 @@ void setWings(){
     else{
         wings.set(true);
     }
+}
+
+void newTurn(double targetAngle){
+    resetTurnVariables();
+    resetHeading();
+
+    settlingDist = fabs(targetAngle/45);
+    if(targetAngle < 0) { 
+        targetAngle = 360 - fabs(targetAngle);
+        gyroscope.setHeading(359.9, rotationUnits::deg); // 359.9 to avoid 0/360 glitch
+        leftTurn = true;
+    }
+
+    enableTurn = true;
+    
+
+    while(enableTurn){
+
+        error = targetAngle - getHeading();
+        speedL = targetAngle/3;
+        speedR = -targetAngle/3;
+
+        if(leftTurn){
+
+        speedL = -fabs(originalInput)/5;
+        speedR = fabs(originalInput)/5;
+
+            if (speedL > -5 && speedR < 5){
+                speedL = -5;
+                speedR = 5;
+            }
+
+            if(fabs(error) <= settlingDist){
+            brakeDrive(brake);
+            enableTurn = false;
+            break;
+            }
+        }
+        else if(!leftTurn){
+            if (speedL < 5 && speedR > -5){
+                speedL = 5;
+                speedR = -5;
+            }
+            
+            if(error <= settlingDist){
+            brakeDrive(brake);
+            enableTurn = false;
+            break;
+            }
+        }
+        
+        move(fwd, speedL, speedR);
+
+
+
+        
+
+        vexDelay(5);
+    }
+
+    vexDelay(200);
+    brakeDrive(coast);
+    
+    
+
+    
+
+
+
 }
