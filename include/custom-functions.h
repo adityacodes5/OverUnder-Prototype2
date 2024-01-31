@@ -14,6 +14,7 @@ extern void moveInches(double inchesToTurn, double motorVelocity, bool waitForCo
 extern void moveInchesPID(double inchesToTurn, double motorVelocity, bool forward);
 extern void oldMoveInches(double inchesToTurn, double motorVelocity);
 extern void turnDegrees(double degreesToTurn, double motorVelocity);
+extern void moveStraight(double targetDistance, double motorVelocity, double p, double i, double d, double tolerance);
 
 extern double timeElapsed(timeUnits units);
 extern void resetTimer();

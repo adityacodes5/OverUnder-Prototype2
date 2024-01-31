@@ -135,7 +135,7 @@ void usercontrol(void) {
     }
 
     if (Controller1.ButtonB.pressing()){
-      turnDegrees(90, 10);
+      moveStraight(50, 50, 0.01, 0, 0, 1); // Example: Move straight for 100 units with a velocity of 50
     }
 
     else if (!Controller1.ButtonR2.pressing()){

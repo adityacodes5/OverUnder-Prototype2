@@ -626,3 +626,112 @@ void setWings(){
         wings.set(true);
     }
 }
+
+double calculateAverageMotorPosition() {
+    double sumPositions = 0.0;
+
+    // Sum the positions of each motor
+    sumPositions += GearboxLB.position(rotationUnits::deg);
+    sumPositions += GearboxLF.position(rotationUnits::deg);
+    sumPositions += LeftPush.position(rotationUnits::deg);
+    sumPositions += GearboxRB.position(rotationUnits::deg);
+    sumPositions += GearboxRF.position(rotationUnits::deg);
+    sumPositions += RightPush.position(rotationUnits::deg);
+
+    // Calculate the average position
+    double averagePosition = sumPositions / 6.0; // Assuming you have 6 motors
+
+    return averagePosition;
+}
+
+
+void moveStraight(double inches, double motorVelocity, double p, double i, double d, double settleDist) {
+    double encoderCountsPerRevolution = 900; 
+    double targetDistance = (inches / wheelCircumference) * encoderCountsPerRevolution;
+    resetDegreePosition();
+
+    double Kp = p;
+    double Ki = i;
+    double Kd = d;
+
+    double integral = 0;
+    double prevError = 0;
+
+    while (true) {
+        double error = targetDistance - calculateAverageMotorPosition();
+
+        integral += error;
+        double derivative = error - prevError;
+
+        double correction = Kp * error + Ki * integral + Kd * derivative;
+
+        double leftSpeed = motorVelocity + correction;
+        double rightSpeed = motorVelocity - correction;
+
+        // Apply the speeds to the drive motors
+        GearboxLB.spin(vex::forward, leftSpeed, velocityUnits::pct);
+        GearboxLF.spin(vex::forward, leftSpeed, velocityUnits::pct);
+        LeftPush.spin(vex::forward, leftSpeed, velocityUnits::pct);
+
+        GearboxRB.spin(vex::forward, rightSpeed, velocityUnits::pct);
+        GearboxRF.spin(vex::forward, rightSpeed, velocityUnits::pct);
+        RightPush.spin(vex::forward, rightSpeed, velocityUnits::pct);
+
+        if (fabs(error) <= settleDist) {
+            brakeDrive(coast);
+            break;
+        }
+
+        vexDelay(deltaTime);
+    }
+}
+/*
+void moveStraight(double inches, double motorVelocity, double p, double i, double d, double settleDist) {
+    double enoderCountsPerRevolution = 900;
+    double targetDistance = (inches / wheelCircumference) * encoderCountsPerRevolution;
+    resetDegreePosition();
+
+    double Kp = p;
+    double Ki = i;
+    double Kd = d;
+
+    double integral = 0;
+    double prevError = 0;
+
+    // Gyro parameters
+    double gyroKp = 1.0;
+    double gyroHeading = 0.0;
+
+    while (true) {
+        double error = targetDistance - calculateAverageMotorPosition();
+
+        // Gyro correction
+        double gyroError = gyroHeading - gyroscope.rotation(rotationUnits::deg);
+        double gyroCorrection = gyroKp * gyroError;
+
+        integral += error;
+        double derivative = error - prevError;
+
+        double correction = Kp * error + Ki * integral + Kd * derivative + gyroCorrection;
+
+        double leftSpeed = motorVelocity + correction;
+        double rightSpeed = motorVelocity - correction;
+
+        // Apply the speeds to the drive motors
+        GearboxLB.spin(vex::forward, leftSpeed, velocityUnits::pct);
+        GearboxLF.spin(vex::forward, leftSpeed, velocityUnits::pct);
+        LeftPush.spin(vex::forward, leftSpeed, velocityUnits::pct);
+
+        GearboxRB.spin(vex::forward, rightSpeed, velocityUnits::pct);
+        GearboxRF.spin(vex::forward, rightSpeed, velocityUnits::pct);
+        RightPush.spin(vex::forward, rightSpeed, velocityUnits::pct);
+
+        if (fabs(error) <= settleDist) {
+            brakeDrive(coast);
+            break;
+        }
+
+        vexDelay(deltaTime);
+    }
+}
+*/
