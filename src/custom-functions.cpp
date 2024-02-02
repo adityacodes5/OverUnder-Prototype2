@@ -26,7 +26,6 @@ double averageRotation;
 double degreesToTurn;
 double distanceInches;
 double averageDriveRotation;
-double distanceDegrees;
 double distanceError;
 double distanceErrorToTurn;
 double distanceErrorDerivative;
@@ -48,6 +47,15 @@ double speedR;
 double settlingDist;
 bool leftTurn;
 bool enableTurn;
+
+//move PID variables
+double originalInches;
+double settlingInches;
+double distanceDegrees;
+double inchesError;
+double speed;
+bool enableMove;
+
 
 double valueRotation;
 
@@ -127,14 +135,14 @@ double calculateAverageMotorRotation(){
 
     valueRotation = (
 
-        GearboxRF.position(rotationUnits::deg) +
-        GearboxRB.position(rotationUnits::deg) +
+        fabs(GearboxRF.position(rotationUnits::deg)) +
+        fabs(GearboxRB.position(rotationUnits::deg)) +
 
-        GearboxLF.position(rotationUnits::deg) +
-        GearboxLB.position(rotationUnits::deg) +
+        fabs(GearboxLF.position(rotationUnits::deg)) +
+        fabs(GearboxLB.position(rotationUnits::deg)) +
 
-        RightPush.position(rotationUnits::deg) +
-        LeftPush.position(rotationUnits::deg) 
+        fabs(RightPush.position(rotationUnits::deg)) +
+        fabs(LeftPush.position(rotationUnits::deg))
 
         ) / 6;
 
@@ -494,6 +502,15 @@ void resetTurnVariables(){
     speedL = 0;
     speedR = 0;
     leftTurn = false;
+    settlingDist = 0;
+    originalInput = 0;
+
+    originalInches = 0;
+    settlingInches = 0;
+    distanceDegrees = 0;
+    inchesError = 0;
+    speed = 0;
+    enableMove = false;
 
 }
 
@@ -585,23 +602,52 @@ void matchLoadAuton(){ //bot is set backwards
 }
 
 void closeSideAuton(){ //bot is set forwards
-    move(fwd, 60, 72);
-    vexDelay(1500);
-    brakeDrive(coast);
-    wait(500, msec);
+    //move(fwd, 60, 72);
+    //vexDelay(1500);
+    //brakeDrive(coast);
+    //wait(500, msec);
+    //grabTriball(100*120, true);
+    //move(fwd, 20, 20);
+    //wait(1000, msec);
+    //grabTriball(0, true);
+    //brakeDrive(coast);
+    //wait(500, msec);   
+    //move(directionType::rev, 20, 20);
+    //wait(500, msec);
+    //move(fwd, 80, 80);
+    //wait(1000,msec);
+    //move(directionType::rev, 30, 30);
+    //wait(1000, msec);
+    //brakeDrive(coast);
+
+
+    //move(fwd, 60, 72);
+    //vexDelay(1500);
+    //brakeDrive(coast);
+    //wait(100, msec);
+    //grabTriball(100*120, true);
+    //wait(250,msec);
+    //move(directionType::rev, 40, 40);
+    //wait(500,msec);
+    //grabTriball(0, true);
+    //brakeDrive(coast);
+    //wait(200,msec);
+    //move(fwd,100,100);
+    //wait(500,msec);
+    //brakeDrive(coast); 
+
+    wings.set(true);
+    vexDelay(500);
+    newMoveInches(13, 2);
+    newTurn(-30, 1);
+    vexDelay(250);
+    wings.set(false);
+    move(fwd, 70, 60);
+    vexDelay(500);
     grabTriball(100*120, true);
-    move(fwd, 20, 20);
-    wait(1000, msec);
+    vexDelay(500);
+    brakeDrive(coast);
     grabTriball(0, true);
-    brakeDrive(coast);
-    wait(500, msec);   
-    move(directionType::rev, 20, 20);
-    wait(500, msec);
-    move(fwd, 80, 80);
-    wait(1000,msec);
-    move(directionType::rev, 30, 30);
-    wait(1000, msec);
-    brakeDrive(coast);
 }
 
 void setWings(){
@@ -613,10 +659,11 @@ void setWings(){
     }
 }
 
-void newTurn(double targetAngle){
+void newTurn(double targetAngle, double speed){
     resetTurnVariables();
     resetHeading();
 
+    originalInput = targetAngle;
     settlingDist = fabs(targetAngle/45);
     if(targetAngle < 0) { 
         targetAngle = 360 - fabs(targetAngle);
@@ -630,8 +677,8 @@ void newTurn(double targetAngle){
     while(enableTurn){
 
         error = targetAngle - getHeading();
-        speedL = targetAngle/5;
-        speedR = -targetAngle/5;
+        speedL = targetAngle/5 * speed;
+        speedR = -targetAngle/5 * speed;
 
         if(leftTurn){
 
@@ -643,7 +690,7 @@ void newTurn(double targetAngle){
                 speedR = 5;
             }
 
-            if(fabs(error) <= settlingDist){
+            if(fabs(error) <= settlingDist*speed){
             brakeDrive(brake);
             enableTurn = false;
             break;
@@ -656,7 +703,7 @@ void newTurn(double targetAngle){
                 speedR = -5;
             }
             
-            if(error <= 1){
+            if(error <= 2){
             brakeDrive(brake);
             enableTurn = false;
             break;
@@ -664,8 +711,6 @@ void newTurn(double targetAngle){
         }
         
         move(fwd, speedL, speedR);
-
-
 
         
 
@@ -675,10 +720,41 @@ void newTurn(double targetAngle){
     vexDelay(200);
     brakeDrive(coast);
     
+
+
+}
+
+void newMoveInches(int inchesToMove, int multiplierSpeed){
+    resetDegreePosition(); //Set all degree measurements to 0
+    resetTurnVariables();
+
+    distanceDegrees = inchesToDegrees(inchesToMove);
+    originalInches = inchesToMove;
+    settlingInches = (distanceDegrees/10);
+
+
+
+    enableMove = true;
+
+    while(enableMove){
+
+        inchesError = distanceDegrees - calculateAverageMotorRotation();
+        speed = inchesError/7 * multiplierSpeed;
+
+        move(fwd, speed, speed);
+
+
+        if(inchesError <= 1*deltaTime){
+            brakeDrive(brake);
+            enableTurn = false;
+            break;
+        }
+
+        vexDelay(deltaTime);
     
 
+    }
+
+
     
-
-
-
 }

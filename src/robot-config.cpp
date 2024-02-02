@@ -22,7 +22,7 @@ motor LeftPush = motor(PORT20, ratio18_1, true);
 motor Intake = motor(PORT11, ratio18_1, false);
 motor kickerArm = motor(PORT3, ratio36_1, false);
 motor kicker = motor(PORT17, ratio18_1, true);
-inertial gyroscope = inertial(PORT14);
+inertial gyroscope = inertial(PORT8);
 digital_out wings = digital_out(Brain.ThreeWirePort.A);
 digital_out armHold = digital_out(Brain.ThreeWirePort.B);
 

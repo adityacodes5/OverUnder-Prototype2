@@ -127,7 +127,7 @@ void usercontrol(void) {
 
     if (Controller1.ButtonR2.pressing()){
 
-      kick(100, true);
+      kick(75, true);
 
     }
 
@@ -168,13 +168,13 @@ void usercontrol(void) {
 
     if(Controller1.ButtonA.pressing()){
 
-      newTurn(90);
+      newTurn(90,1);
 
     }
 
     if(Controller1.ButtonB.pressing()){
 
-      newTurn(150);
+      closeSideAuton();
 
     }
 
