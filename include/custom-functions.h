@@ -13,6 +13,7 @@ extern void kick(double velocity, bool pullBack);
 extern void moveInches(double inchesToTurn, double motorVelocity, bool waitForCompletion, bool forward);
 extern void moveInchesPID(double inchesToTurn, double motorVelocity, bool forward);
 extern void oldMoveInches(double inchesToTurn, double motorVelocity);
+extern void ProgSkills();
 
 extern double timeElapsed(timeUnits units);
 extern void resetTimer();

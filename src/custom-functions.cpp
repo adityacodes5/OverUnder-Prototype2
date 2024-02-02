@@ -55,6 +55,7 @@ double distanceDegrees;
 double inchesError;
 double speed;
 bool enableMove;
+bool Forward;
 
 
 double valueRotation;
@@ -732,29 +733,50 @@ void newMoveInches(int inchesToMove, int multiplierSpeed){
     originalInches = inchesToMove;
     settlingInches = (distanceDegrees/10);
 
-
-
+    Forward = false;
+    if(originalInches > 0){
+        Forward = true;  
+    }
     enableMove = true;
 
     while(enableMove){
-
-        inchesError = distanceDegrees - calculateAverageMotorRotation();
+        
+        inchesError = fabs(distanceDegrees) - calculateAverageMotorRotation();
         speed = inchesError/7 * multiplierSpeed;
 
-        move(fwd, speed, speed);
+        if(Forward){
+            move(fwd, speed, speed);
 
+            if(inchesError <= 1*deltaTime){
+                brakeDrive(brake);
+                enableTurn = false;
+                break;
+            }
+        }
 
-        if(inchesError <= 1*deltaTime){
-            brakeDrive(brake);
-            enableTurn = false;
-            break;
+        if(!Forward){
+            move(reverse, speed, speed);
+
+            if(inchesError <= 1*deltaTime){ //Might need to change 
+                brakeDrive(brake);
+                enableTurn = false;
+                break;
+            }
         }
 
         vexDelay(deltaTime);
-    
-
     }
+}
 
 
-    
+void ProgSkills(){
+    kick(75, true); // starts kicker
+    vexDelay(35000);
+    kick(0, true); //stops kicker after 35sec
+    newMoveInches(66, 1); //goes to middle 
+    newTurn(-45, 1); //turns perpendicular to the net 
+    wings.set(true); //opens the wings
+    newMoveInches(50, 1); // goes through the middle and pushes the balls in 
+    newMoveInches(-40,1); // goes back then forward into the net to do rest of the triballs 
+    newMoveInches(40,1); 
 }
