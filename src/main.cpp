@@ -33,10 +33,10 @@ void pre_auton(void) {
 void autonomous(void) {
 
 
-  //closeSideAuton();
+  closeSideAuton();
   //matchLoadAuton();
 
-  startTurn(70, 90, 0, 0, 0);
+
 
   
 
@@ -154,6 +154,13 @@ void usercontrol(void) {
         wingsTriggered = false;
       }
     }
+
+    if(Controller1.ButtonX.pressing()){
+
+      armTriggered = true;
+
+    }
+
     if(armTriggered && Controller1.ButtonX.pressing() == false){
       if(armHold.value() == false){
         armHold.set(true);
@@ -165,20 +172,6 @@ void usercontrol(void) {
         armTriggered = false;
       }
     }
-
-    if(Controller1.ButtonA.pressing()){
-
-      newTurn(90,1);
-
-    }
-
-    if(Controller1.ButtonB.pressing()){
-
-      closeSideAuton();
-
-    }
-
-
 
 
 

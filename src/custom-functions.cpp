@@ -598,27 +598,27 @@ void matchLoadAuton(){ //bot is set backwards
     move(fwd, 30, 30);
     wait(1500, msec);
     brakeDrive(coast);
-    kickerArm.spinTo(540, rotationUnits::deg, true);
+    //kickerArm.spinTo(540, rotationUnits::deg, true);
 }
 
 void closeSideAuton(){ //bot is set forwards
-    //move(fwd, 60, 72);
-    //vexDelay(1500);
-    //brakeDrive(coast);
-    //wait(500, msec);
-    //grabTriball(100*120, true);
-    //move(fwd, 20, 20);
-    //wait(1000, msec);
-    //grabTriball(0, true);
-    //brakeDrive(coast);
-    //wait(500, msec);   
-    //move(directionType::rev, 20, 20);
-    //wait(500, msec);
-    //move(fwd, 80, 80);
-    //wait(1000,msec);
-    //move(directionType::rev, 30, 30);
-    //wait(1000, msec);
-    //brakeDrive(coast);
+    move(fwd, 60, 72);
+    vexDelay(1500);
+    brakeDrive(coast);
+    wait(500, msec);
+    grabTriball(100*120, true);
+    move(fwd, 20, 20);
+    wait(1000, msec);
+    grabTriball(0, true);
+    brakeDrive(coast);
+    wait(500, msec);   
+    move(directionType::rev, 20, 20);
+    wait(500, msec);
+    move(fwd, 80, 80);
+    wait(1000,msec);
+    move(directionType::rev, 30, 30);
+    wait(1000, msec);
+    brakeDrive(coast);
 
 
     //move(fwd, 60, 72);
@@ -636,18 +636,18 @@ void closeSideAuton(){ //bot is set forwards
     //wait(500,msec);
     //brakeDrive(coast); 
 
-    wings.set(true);
-    vexDelay(500);
-    newMoveInches(13, 2);
-    newTurn(-30, 1);
-    vexDelay(250);
-    wings.set(false);
-    move(fwd, 70, 60);
-    vexDelay(500);
-    grabTriball(100*120, true);
-    vexDelay(500);
-    brakeDrive(coast);
-    grabTriball(0, true);
+    //wings.set(true);
+    //vexDelay(500);
+    //newMoveInches(13, 2);
+    //newTurn(-30, 1);
+    //vexDelay(250);
+    //wings.set(false);
+    //move(fwd, 70, 60);
+    //vexDelay(500);
+    //grabTriball(100*120, true);
+    //vexDelay(500);
+    //brakeDrive(coast);
+    //grabTriball(0, true);
 }
 
 void setWings(){
