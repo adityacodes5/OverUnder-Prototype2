@@ -33,10 +33,10 @@ void pre_auton(void) {
 void autonomous(void) {
 
 
-  //closeSideAuton();
+  closeSideAuton();
   //matchLoadAuton();
 
-  startTurn(70, 90, 0, 0, 0);
+  //startTurn(70, 90, 0, 0, 0);
 
   
 
@@ -153,6 +153,10 @@ void usercontrol(void) {
         wings.set(false);
         wingsTriggered = false;
       }
+    }
+
+    if(Controller1.ButtonX.pressing()){
+      armTriggered = true;
     }
     if(armTriggered && Controller1.ButtonX.pressing() == false){
       if(armHold.value() == false){
