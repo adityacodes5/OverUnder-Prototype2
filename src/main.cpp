@@ -12,7 +12,7 @@ using namespace vex;
 
 // A global instance of competition
 competition Competition;
-
+PID pid(0, 0, 0, 0, 0);
 // define your global instances of motors and other devices here
 
 
@@ -33,7 +33,7 @@ void pre_auton(void) {
 void autonomous(void) {
 
 
-  closeSideAuton();
+  //closeSideAuton();
   //matchLoadAuton();
 
 
@@ -46,6 +46,7 @@ void autonomous(void) {
 
 void usercontrol(void) {
 
+  pregameCalibrate(); //REMOVE LATER
   int maxSpeed = 100*120;
   bool alertOnce30 = true;
   bool alertOnce15 = true;
@@ -55,8 +56,9 @@ void usercontrol(void) {
   double rightAxismV;
   double test;
   bool driving;
-  bool wingsTriggered;
-  bool armTriggered;
+  bool wingsTriggered = false;
+  bool armTriggered = true;
+  bool kickerTriggered;
 
   resetTimer();
 
@@ -127,7 +129,7 @@ void usercontrol(void) {
 
     if (Controller1.ButtonR2.pressing()){
 
-      kick(75, true);
+      kick(100, false);
 
     }
 
@@ -173,7 +175,30 @@ void usercontrol(void) {
       }
     }
 
+    if(Controller1.ButtonB.pressing()){
 
+      pid.turnFor(-90);
+
+    }
+
+    if(Controller1.ButtonA.pressing()){
+      pid.moveFor(20, 300, 3000, true, 0);
+      pid.turnFor(-40);
+      pid.moveFor(40, 300, 1000, false, 0);
+      pid.moveFor(-10, 250, 1000, false, 1); 
+     // pid.moveFor(40, 300, 1000, false, 0);
+      //pid.moveFor(-10, 300, 1000, false, 0);
+      pid.turnFor(-90);
+      pid.moveFor(30, 500, 1500, false, 0);
+      pid.turnFor(25);
+      pid.moveFor(22, 500, 1500, false, 2);
+      pid.moveFor(-10, 500, 1500, false, 0);
+      pid.turnFor(65);
+      pid.moveFor(24, 500, 1500, false, 0);
+      pid.turnFor(90);
+      wings.set(true);
+      pid.moveFor(40, 300, 2000, true, 1);
+    }
 
     wait(5, msec);
   }

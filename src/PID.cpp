@@ -74,7 +74,10 @@ void PID::setValues(double error = 0, double kP = 0, double kI = 0, double kD = 
     this-> timeSpentRunning = 0;
     this-> degreesError = 0;
     this-> motorSpeed = 0;
+    this-> leftDegrees = 0;
+    this-> originalDegrees = 0;
     this-> moveEnabled = false;
+    this-> leftTurn = false;
 
     resetDegreePosition();
     resetHeading();
@@ -98,17 +101,52 @@ bool PID::isSettled(){
 
 }
 
-void PID::moveFor(double inches){
-    setValues(inches, 0, 0, 0, 2, 90, 250, 5000); //Please test and tune these values as required. Set P, I, and D values
+void PID::moveFor(double inches, double settleTime = 300, double timeout = 4000, bool openWingsHalfway = false, int outTakeAtEnd = false){
+    setValues(inches, 0.22, 0.2, 2, 15, 20, settleTime, timeout); //Please test and tune these values as required. Set P, I, and D values
     moveEnabled = true;
+
+    originalDegrees = ((inches * 360) / (wheelCircumference * gearRatio));
+
     while(moveEnabled){
+        if(inches>=0){
+            degreesError = ((inches * 360) / (wheelCircumference * gearRatio)) - calculateAverageMotorRotation();
+        }
+
+        if(inches<0){
+            degreesError = ((inches * 360) / (wheelCircumference * gearRatio)) + calculateAverageMotorRotation();
+        }
         
-        degreesError = ((inches * 360) / (wheelCircumference * gearRatio)) - calculateAverageMotorRotation();
+        if(openWingsHalfway){
+            if((fabs(degreesError) < fabs(originalDegrees/2)) && wings.value() == false){
+                wings.set(true);
+            }
+        }
+
+        if(outTakeAtEnd == 1){
+            if(timeSpentRunning < 500){
+                Intake.spin(reverse, 100, percentUnits::pct);
+            }
+        }
+
+        if(outTakeAtEnd == 2){
+            if(timeSpentRunning < 500){
+                Intake.spin(forward, 100, percentUnits::pct);
+            }
+        }
         motorSpeed = compute(degreesError);
         move(fwd, motorSpeed, motorSpeed);
 
         if (isSettled()){
             moveEnabled = false;
+
+            if(wings.value() == true){
+                wings.set(false);
+            }
+
+            if(outTakeAtEnd){
+                Intake.stop();
+            }
+
             break;
         }
 
@@ -119,14 +157,32 @@ void PID::moveFor(double inches){
 }
 
 void PID::turnFor(double degrees){
-    setValues(degrees, 0, 0, 0, 5, 15, 250, 5000); //Please test and tune these values as required. Set P, I, and D values
+    gyroscope.setHeading(0.1, vex::rotationUnits::deg); //Resets the gyroscope
+    setValues(0, .5, 0, 0, 5, 5, 250, 2000); //Please test and tune these values as required. Set P, I, and D values
+    if(degrees < 0) { 
+        leftDegrees = 360 - fabs(degrees);
+        gyroscope.setHeading(359.9, rotationUnits::deg); // 359.9 to avoid 0/360 glitch
+        leftTurn = true;
+
+    }
     moveEnabled = true;
     while(moveEnabled){
-        move(fwd, motorSpeed, -motorSpeed);
+        
+        
+        if(!leftTurn){
+            degreesError = degrees - getHeading(); //Future note: try turning robot without resetting heading to see if it works
+            motorSpeed = compute(degreesError);
+            move(fwd, motorSpeed, -motorSpeed);
+            
+        }   
+        else if(leftTurn){
+            degreesError = getHeading() - fabs(leftDegrees);
+            motorSpeed = compute(degreesError);
+            move(fwd, -motorSpeed, motorSpeed);
+        }
 
         if (isSettled()){
-             degreesError = degrees - getHeading(); //Future note: try turning robot without resetting heading to see if it works
-            motorSpeed = compute(degreesError);
+            
             moveEnabled = false;
             break;
         }

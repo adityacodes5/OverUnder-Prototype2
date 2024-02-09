@@ -29,8 +29,11 @@ class PID{
         double timeSpentRunning = 0;
         double degreesError = 0;
         double motorSpeed = 0;
+        double leftDegrees = 0;
+        double originalDegrees = 0;
 
         bool moveEnabled = false;
+        bool leftTurn = false;
 
         //For each variable added, check "setvalues" in case you need to reset
 
@@ -44,7 +47,7 @@ class PID{
 
         bool isSettled();
 
-        void moveFor(double Inches);
+        void moveFor(double Inches, double settleTime, double timeout, bool openWingsHalfway, int outTakeAtEnd);
 
         void turnFor(double degrees);
 
