@@ -398,7 +398,7 @@ bool autoDrive(){
 
     else{
 
-        brakeDrive(brake);
+        brakeDrive(coast);
         return false;
 
     }
