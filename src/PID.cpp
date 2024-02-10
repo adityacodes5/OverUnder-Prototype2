@@ -176,6 +176,9 @@ void PID::turnFor(double degrees){
             
         }   
         else if(leftTurn){
+            if (getHeading() > 180){
+                gyroscope.setHeading(359.9, rotationUnits::deg);
+            }
             degreesError = getHeading() - fabs(leftDegrees);
             motorSpeed = compute(degreesError);
             move(fwd, -motorSpeed, motorSpeed);
