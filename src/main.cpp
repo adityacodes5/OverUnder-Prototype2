@@ -30,7 +30,7 @@ void pre_auton(void) {
 void autonomous(void) {
   //closeSideAuton();
   //matchLoadAuton();
-  move(fwd, 100, 100);
+  AWP();
 }
 
 
@@ -138,88 +138,11 @@ void usercontrol(void) {
     }
 
     if(Controller1.ButtonB.pressing()){
-      int timee = 5000;
-      //prog skills
-      pid.moveFor(1, 300, timee, false, 0);// to start program put it upgainst the far side pole and it should be parelle to the NET
-      pid.turnFor(-45);
-      pid.moveFor(30, 300, timee, false, 1); // goes to net
-      pid.moveFor(-5, 300, timee, false, 0); 
-      pid.turnFor(90);
-      pid.moveFor(-2, 300, timee, false, 0);// goes to shooting pos
-      //kickerArm.spinTo(360, rotationUnits::deg, true);
-      kick(100, false);
-      brakeDrive(coast);
-      vexDelay(10000); //shoot
-      kicker.stop();
-      //kickerArm.spinTo(0, rotationUnits::deg, true);
-      pid.moveFor(2, 300, timee, false, 0); 
-      pid.turnFor(-50);
-      pid.moveFor(30, 500, 1500, false, 0);
-      pid.turnFor(5);
-      pid.moveFor(100, 500, 5000, false, 0);
-      pid.turnFor(45);
-      wings.set(true);
-      pid.moveFor(30, 500, 1500, false, 1);
-      wings.set(false);
-      pid.moveFor(-10, 500, 1000, false, 0);
-      pid.turnFor(90);
-      pid.moveFor(40, 500, 1500, false, 0);
-      pid.turnFor(-45);
-      wings.set(true);
-      pid.moveFor(35, 500, 1500, false, 1);
-      
-      
-      // pid.moveFor(100, 300, timee, false, 0);// go through side bar
-      // pid.turnFor(45);
-      // wings.set(true);
-      // pid.moveFor(40, 300, timee, false, 1); // go to net
-      // pid.moveFor(-10, 300, timee, false, 0);// get away from net
-      // wings.set(false);
-      // pid.turnFor(90);
-      // pid.moveFor(30, 300, timee, false, 0);// go to front of net
-      // pid.turnFor(-90);
-      // pid.moveFor(20, 300, timee, false, 0);// push tribals into net
-      // pid.turnFor(-90);
-      // pid.moveFor(30, 300, timee, false, 1);
-      // pid.moveFor(-30, 300, timee, false, 0);
-      // pid.turnFor(90);
-      // pid.moveFor(20, 300, timee, false, 0); // go to the 2nd time pushing in triballs to front of net 
-      // pid.turnFor(-90);
-      // pid.moveFor(30, 300, timee, false, 0);
-      // pid.moveFor(-30, 300, timee, false, 0);
-      //maybe left side push????
+      PROG();
     }
 
     if(Controller1.ButtonA.pressing()){
-      //AWP 
-      pid.moveFor(1, 300, 3000, true, 0);
-      pid.turnFor(50);
-      wings.set(true);
-      pid.moveFor(22, 300, 3000, true, 0);
-      pid.turnFor(-35);
-      pid.moveFor(30, 300, 1000, false, 0);
-      wings.set(false);
-      pid.moveFor(-7, 250, 1000, false, 1); 
-      pid.turnFor(-90);
-      pid.moveFor(30, 500, 1500, false, 0);
-      pid.turnFor(30);
-      pid.moveFor(20, 500, 1500, false, 2);
-      pid.turnFor(70);
-      wings.set(true);
-      pid.moveFor(18, 300, 2000, true, 2);
-      wings.set(true);
-      pid.turnFor(90);
-      wings.set(true);
-      pid.moveFor(20, 500, 1500, true, 1);
-      wings.set(false);
-      pid.moveFor(-20, 500, 1500, false, 0);
-      pid.turnFor(90);
-      pid.moveFor(30, 500, 2000, false, 0);
-      pid.turnFor(90);
-      wings.set(true);
-      pid.moveFor(10, 500, 1500, true, 0);
-      wings.set(true);
-
+      AWP();
     }
 
     wait(5, msec);
