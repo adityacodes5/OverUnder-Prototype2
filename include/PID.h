@@ -49,7 +49,7 @@ class PID{
 
         void moveFor(double Inches, double settleTime, double timeout, bool openWingsHalfway, int outTakeAtEnd);
 
-        void turnFor(double degrees);
+        void turnFor(double degrees, double settle);
 
   
 

@@ -12,32 +12,42 @@ using namespace vex;
 
 // A global instance of competition
 competition Competition;
-PID pid(0, 0, 0, 0, 0);
+//PID pid(0, 0, 0, 0, 0);
 // define your global instances of motors and other devices here
-
+bool isCalibrated;
 
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
 
   pregameCalibrate();
-
+  isCalibrated = true;
+  Brain.Screen.print("It works!");
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
 
 
 void autonomous(void) {
+  if(!isCalibrated){
+    pregameCalibrate();
+    isCalibrated = true;
+  }
   //closeSideAuton();
   //matchLoadAuton();
+  //yes();
   AWP();
+  //PROG();
 }
 
 
 
 void usercontrol(void) {
 
-  pregameCalibrate(); //REMOVE LATER
+  if(!isCalibrated){
+    pregameCalibrate();
+    isCalibrated = true;
+  }
   int maxSpeed = 100*120;
   bool alertOnce30 = true;
   bool alertOnce15 = true;
@@ -138,11 +148,15 @@ void usercontrol(void) {
     }
 
     if(Controller1.ButtonB.pressing()){
-      PROG();
+      //PROG();
     }
 
     if(Controller1.ButtonA.pressing()){
-      AWP();
+      //AWP();
+    }
+
+    if(Controller1.ButtonY.pressing()){
+      yes();
     }
 
     wait(5, msec);

@@ -15,6 +15,7 @@ extern void moveInchesPID(double inchesToTurn, double motorVelocity, bool forwar
 extern void oldMoveInches(double inchesToTurn, double motorVelocity);
 extern void AWP();
 extern void PROG();
+extern void yes();
 
 extern double timeElapsed(timeUnits units);
 extern void resetTimer();

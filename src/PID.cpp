@@ -102,7 +102,7 @@ bool PID::isSettled(){
 }
 
 void PID::moveFor(double inches, double settleTime = 300, double timeout = 4000, bool openWingsHalfway = false, int outTakeAtEnd = false){
-    setValues(inches, 0.22, 0.2, 2, 15, 20, settleTime, timeout); //Please test and tune these values as required. Set P, I, and D values
+    setValues(inches, 0.2, 0.2, 2, 15, 20, settleTime, timeout); //Please test and tune these values as required. Set P, I, and D values
     moveEnabled = true;
 
     originalDegrees = ((inches * 360) / (wheelCircumference * gearRatio));
@@ -156,14 +156,17 @@ void PID::moveFor(double inches, double settleTime = 300, double timeout = 4000,
 
 }
 
-void PID::turnFor(double degrees){
-    gyroscope.setHeading(0.1, vex::rotationUnits::deg); //Resets the gyroscope
-    setValues(0, .5, 0, 0, 5, 5, 250, 2000); //Please test and tune these values as required. Set P, I, and D values
+void PID::turnFor(double degrees, double settle){
+    //Resets the gyroscope
+    setValues(0, .5, 0, 0, 5, 5, settle, 2000); //Please test settle time
     if(degrees < 0) { 
         leftDegrees = 360 - fabs(degrees);
-        gyroscope.setHeading(359.9, rotationUnits::deg); // 359.9 to avoid 0/360 glitch
+        gyroscope.setHeading(359, rotationUnits::deg); // 359.9 to avoid 0/360 glitch
         leftTurn = true;
 
+    }
+    if (degrees >= 0){
+        gyroscope.setHeading(1, vex::rotationUnits::deg);
     }
     moveEnabled = true;
     while(moveEnabled){
@@ -176,12 +179,10 @@ void PID::turnFor(double degrees){
             
         }   
         else if(leftTurn){
-            if (getHeading() > 180){
-                gyroscope.setHeading(359.9, rotationUnits::deg);
-            }
+
             degreesError = getHeading() - fabs(leftDegrees);
             motorSpeed = compute(degreesError);
-            move(fwd, -motorSpeed, motorSpeed);
+            move(reverse, motorSpeed, -motorSpeed);
         }
 
         if (isSettled()){

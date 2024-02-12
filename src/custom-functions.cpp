@@ -761,84 +761,131 @@ void newMoveInches(int inchesToMove, int multiplierSpeed){
 }
 
 void AWP(){
-      pid.moveFor(1, 300, 3000, true, 0);
-      pid.turnFor(50);
-      wings.set(true);
-      pid.moveFor(22, 300, 3000, true, 0);
-      pid.turnFor(-35);
-      pid.moveFor(30, 300, 1000, false, 0);
-      wings.set(false);
-      pid.moveFor(-7, 250, 1000, false, 1); 
-      pid.turnFor(-90);
-      pid.moveFor(30, 500, 1500, false, 0);
-      pid.turnFor(30);
-      pid.moveFor(20, 500, 1500, false, 2);
-      pid.turnFor(70);
-      wings.set(true);
-      pid.moveFor(18, 300, 2000, true, 2);
-      wings.set(true);
-      pid.turnFor(90);
-      wings.set(true);
-      pid.moveFor(20, 500, 1500, true, 1);
-      wings.set(false);
-      pid.moveFor(-20, 500, 1500, false, 0);
-      pid.turnFor(90);
-      pid.moveFor(30, 500, 2000, false, 0);
-      pid.turnFor(90);
-      wings.set(true);
-      pid.moveFor(10, 500, 1500, true, 0);
-      wings.set(true);
+    wings.set(true);
+        pid.moveFor(26, 300, 1300, true, 0);
+    wings.set(true);
+        pid.turnFor(-60, 200);
+    Intake.spin(forward, 100, percentUnits::pct);
+        pid.moveFor(20,300, 500, false, 1);
+    wings.set(false);
+        pid.moveFor(-7, 250, 300, false, 1); 
+        pid.turnFor(-90, 200);
+    //pid.moveFor(50, 500, 1500, false, 0);
+        pid.moveFor(20, 300, 700, false, 0);
+        pid.turnFor(30, 200);
+        pid.moveFor(30, 300, 900, false, 2);
+        pid.turnFor(70, 200);
+    wings.set(true);
+        pid.moveFor(23, 300, 900, true, 2);
+    wings.set(true);
+        pid.turnFor(90, 200);
+    wings.set(true);
+        pid.moveFor(30, 300, 700, true, 1);
+    wings.set(false);
+        pid.moveFor(-25, 300, 800, false, 0);
+        pid.turnFor(90, 200);
+        pid.moveFor(30, 100, 1300, false, 0);
+        pid.turnFor(90, 200);
+    wings.set(true);
+    //pid.moveFor(1, 500, 1500, true, 0);
+    pid.moveFor(10, 700, 500, true, 0);
+    wings.set(true);
+    move(fwd, 3, 3);
 }
 
+// void PROG(){
+//           int timee = 5000;
+//       //prog skills
+//       pid.moveFor(1, 300, timee, false, 0);// to start program put it upgainst the far side pole and it should be parelle to the NET
+//       pid.turnFor(-45, 200);
+//       pid.moveFor(30, 300, timee, false, 1); // goes to net
+//       pid.moveFor(-5, 300, timee, false, 0); 
+//       pid.turnFor(90, 200);
+//       pid.moveFor(-2, 300, timee, false, 0);// goes to shooting pos
+//       //kickerArm.spinTo(360, rotationUnits::deg, true);
+//       kick(100, false);
+//       brakeDrive(coast);
+//       vexDelay(10000); //shoot
+//       kicker.stop();
+//       //kickerArm.spinTo(0, rotationUnits::deg, true);
+//       pid.moveFor(2, 300, timee, false, 0); 
+//       pid.turnFor(-50, 200);
+//       pid.moveFor(30, 500, 1500, false, 0);
+//       pid.turnFor(5, 200);
+//       pid.moveFor(100, 500, 5000, false, 0);
+//       pid.turnFor(45, 200);
+//       wings.set(true);
+//       pid.moveFor(30, 500, 1500, false, 1);
+//       wings.set(false);
+//       pid.moveFor(-10, 500, 1000, false, 0);
+//       pid.turnFor(90, 200);
+//       pid.moveFor(40, 500, 1500, false, 0);
+//       pid.turnFor(-45, 200);
+//       wings.set(true);
+//       pid.moveFor(35, 500, 1500, false, 1);
+      
+      
+//       // pid.moveFor(100, 300, timee, false, 0);// go through side bar
+//       // pid.turnFor(45);
+//       // wings.set(true);
+//       // pid.moveFor(40, 300, timee, false, 1); // go to net
+//       // pid.moveFor(-10, 300, timee, false, 0);// get away from net
+//       // wings.set(false);
+//       // pid.turnFor(90);
+//       // pid.moveFor(30, 300, timee, false, 0);// go to front of net
+//       // pid.turnFor(-90);
+//       // pid.moveFor(20, 300, timee, false, 0);// push tribals into net
+//       // pid.turnFor(-90);
+//       // pid.moveFor(30, 300, timee, false, 1);
+//       // pid.moveFor(-30, 300, timee, false, 0);
+//       // pid.turnFor(90);
+//       // pid.moveFor(20, 300, timee, false, 0); // go to the 2nd time pushing in triballs to front of net 
+//       // pid.turnFor(-90);
+//       // pid.moveFor(30, 300, timee, false, 0);
+//       // pid.moveFor(-30, 300, timee, false, 0);
+//       //maybe left side push????
+// }
+
 void PROG(){
-          int timee = 5000;
-      //prog skills
-      pid.moveFor(1, 300, timee, false, 0);// to start program put it upgainst the far side pole and it should be parelle to the NET
-      pid.turnFor(-45);
-      pid.moveFor(30, 300, timee, false, 1); // goes to net
-      pid.moveFor(-5, 300, timee, false, 0); 
-      pid.turnFor(90);
-      pid.moveFor(-2, 300, timee, false, 0);// goes to shooting pos
-      //kickerArm.spinTo(360, rotationUnits::deg, true);
-      kick(100, false);
-      brakeDrive(coast);
-      vexDelay(10000); //shoot
-      kicker.stop();
-      //kickerArm.spinTo(0, rotationUnits::deg, true);
-      pid.moveFor(2, 300, timee, false, 0); 
-      pid.turnFor(-50);
-      pid.moveFor(30, 500, 1500, false, 0);
-      pid.turnFor(5);
-      pid.moveFor(100, 500, 5000, false, 0);
-      pid.turnFor(45);
-      wings.set(true);
-      pid.moveFor(30, 500, 1500, false, 1);
-      wings.set(false);
-      pid.moveFor(-10, 500, 1000, false, 0);
-      pid.turnFor(90);
-      pid.moveFor(40, 500, 1500, false, 0);
-      pid.turnFor(-45);
-      wings.set(true);
-      pid.moveFor(35, 500, 1500, false, 1);
-      
-      
-      // pid.moveFor(100, 300, timee, false, 0);// go through side bar
-      // pid.turnFor(45);
-      // wings.set(true);
-      // pid.moveFor(40, 300, timee, false, 1); // go to net
-      // pid.moveFor(-10, 300, timee, false, 0);// get away from net
-      // wings.set(false);
-      // pid.turnFor(90);
-      // pid.moveFor(30, 300, timee, false, 0);// go to front of net
-      // pid.turnFor(-90);
-      // pid.moveFor(20, 300, timee, false, 0);// push tribals into net
-      // pid.turnFor(-90);
-      // pid.moveFor(30, 300, timee, false, 1);
-      // pid.moveFor(-30, 300, timee, false, 0);
-      // pid.turnFor(90);
-      // pid.moveFor(20, 300, timee, false, 0); // go to the 2nd time pushing in triballs to front of net 
-      // pid.turnFor(-90);
-      // pid.moveFor(30, 300, timee, false, 0);
-      // pid.moveFor(-30, 300, timee, false, 0);
-      //maybe left side push????
+    kick(100, false);
+    vexDelay(35000);
+    kicker.stop(coast);
+    wings.set(true);
+    pid.turnFor(-30, 200);
+    wings.set(true);
+    Intake.spin(reverse, 100, percentUnits::pct);
+    pid.moveFor(60, 200, 1500, true, 0);
+    wings.set(true);
+    Intake.spin(reverse, 100, percentUnits::pct);
+    pid.turnFor(60, 300);
+    Intake.spin(reverse, 100, percentUnits::pct);
+    wings.set(false);
+    pid.moveFor(100, 200, 5000, true, 0);
+    //Intake.spin(reverse, 100, percentUnits::pct);
+    wings.set(true);
+    pid.moveFor(-30, 200, 1000, true, 0);
+    Intake.spin(reverse, 100, percentUnits::pct);
+    wings.set(true);
+    pid.turnFor(-30, 300);
+    pid.moveFor(30, 200, 1000, true, 0);
+    Intake.spin(reverse, 100, percentUnits::pct);
+        wings.set(true);
+    pid.moveFor(-30, 200, 1000, true, 0);
+    //Intake.spin(reverse, 100, percentUnits::pct);
+    //    wings.set(true);
+    //pid.moveFor(20, 200, 1500, true, 0);
+    //Intake.spin(reverse, 100, percentUnits::pct);
+    //    wings.set(true);
+    //pid.moveFor(-20, 200, 1500, true, 0);
+    //Intake.spin(reverse, 100, percentUnits::pct);
+    //    wings.set(true);
+
 }
+
+void yes(){
+pid.moveFor(1, 300, 3000, true, 0);
+pid.turnFor(70, 1000);
+pregameCalibrate();
+
+}
+
