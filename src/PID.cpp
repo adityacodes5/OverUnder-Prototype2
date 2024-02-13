@@ -78,6 +78,7 @@ void PID::setValues(double error = 0, double kP = 0, double kI = 0, double kD = 
     this-> originalDegrees = 0;
     this-> moveEnabled = false;
     this-> leftTurn = false;
+    this-> leftSpeed, rightSpeed = 0;
 
     resetDegreePosition();
     resetHeading();
@@ -184,6 +185,56 @@ void PID::turnFor(double degrees, double settle){
             motorSpeed = compute(degreesError);
             move(reverse, motorSpeed, -motorSpeed);
         }
+
+        if (isSettled()){
+            
+            moveEnabled = false;
+            break;
+        }
+
+        vexDelay(deltaTime);
+    }
+}
+
+void PID::arcTurn(double degrees, double radius, double settlingTime, double timeout){
+    setValues(0, .5, 0, 0, 5, 5, settlingTime, timeout); //Please test settle time
+    if(degrees < 0) { 
+        leftDegrees = 360 - fabs(degrees);
+        gyroscope.setHeading(359, rotationUnits::deg); // 359.9 to avoid 0/360 glitch
+        leftTurn = true;
+
+    }
+    if (degrees >= 0){
+        gyroscope.setHeading(1, vex::rotationUnits::deg);
+    }
+    moveEnabled = true;
+    while(moveEnabled){
+        
+        
+        if(!leftTurn){
+            degreesError = degrees - getHeading(); //Future note: try turning robot without resetting heading to see if it works
+            motorSpeed = compute(degreesError);
+            leftSpeed = motorSpeed*(radius+driveBase);
+            if(fabs(leftSpeed) >= 100){
+                leftSpeed = 100;
+            }
+            rightSpeed = motorSpeed*((radius)/(radius-driveBase));
+            move(fwd, leftSpeed, rightSpeed);
+            
+        }   
+        else if(leftTurn){
+
+            degreesError = getHeading() - fabs(leftDegrees);
+            motorSpeed = compute(degreesError);
+            rightSpeed = motorSpeed*(radius+driveBase);
+            if(fabs(rightSpeed) >= 100){
+                rightSpeed = 100;
+            }
+            leftSpeed = motorSpeed*((radius)/(radius-driveBase));
+            move(fwd, leftSpeed, rightSpeed);
+        }
+
+        
 
         if (isSettled()){
             

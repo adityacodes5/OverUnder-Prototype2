@@ -10,6 +10,7 @@ class PID{
         const int deltaTime = 10; //Time between each loop of the PID loop
         const int maxVoltage = 12000; //Max voltage of the motor
         const int delayTime = 10;
+        const int driveBase = 12; //Distance between the wheels
 
         //User adjustable variables
         double error = 0;
@@ -31,6 +32,7 @@ class PID{
         double motorSpeed = 0;
         double leftDegrees = 0;
         double originalDegrees = 0;
+        double leftSpeed, rightSpeed = 0;
 
         bool moveEnabled = false;
         bool leftTurn = false;
@@ -50,6 +52,8 @@ class PID{
         void moveFor(double Inches, double settleTime, double timeout, bool openWingsHalfway, int outTakeAtEnd);
 
         void turnFor(double degrees, double settle);
+        
+        void arcTurn(double degrees, double radius, double settlingTime, double timeout);
 
   
 
