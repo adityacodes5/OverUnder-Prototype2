@@ -889,3 +889,10 @@ pregameCalibrate();
 
 }
 
+double motorValueR(){
+    return (fabs(GearboxRF.position(rotationUnits::deg)) + fabs(GearboxRB.position(rotationUnits::deg)))/2;
+}
+
+double motorValueL(){
+    return (fabs(GearboxLF.position(rotationUnits::deg)) + fabs(GearboxLB.position(rotationUnits::deg)))/2;
+}

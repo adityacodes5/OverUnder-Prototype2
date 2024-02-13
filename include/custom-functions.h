@@ -33,4 +33,6 @@ extern void closeSideAuton();
 extern void setWings();
 extern void newTurn(double targetAngle, double speed);
 extern void newMoveInches(int inchesToMove,int multiplierSpeed);
+double motorValueR();
+double motorValueL();
 

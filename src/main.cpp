@@ -12,7 +12,7 @@ using namespace vex;
 
 // A global instance of competition
 competition Competition;
-//PID pid(0, 0, 0, 0, 0);
+PID Pid(0, 0, 0, 0, 0);
 // define your global instances of motors and other devices here
 bool isCalibrated;
 
@@ -148,7 +148,7 @@ void usercontrol(void) {
     }
 
     if(Controller1.ButtonB.pressing()){
-      //PROG();
+      Pid.arcTurn(45, 20, 300, 2000, false);
     }
 
     if(Controller1.ButtonA.pressing()){

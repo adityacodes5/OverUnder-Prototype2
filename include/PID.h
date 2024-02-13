@@ -33,6 +33,7 @@ class PID{
         double leftDegrees = 0;
         double originalDegrees = 0;
         double leftSpeed, rightSpeed = 0;
+        double leftError, rightError = 0;
 
         bool moveEnabled = false;
         bool leftTurn = false;
@@ -53,7 +54,9 @@ class PID{
 
         void turnFor(double degrees, double settle);
         
-        void arcTurn(double degrees, double radius, double settlingTime, double timeout);
+        void arcTurn(double degrees, double radius, double settlingTime, double timeout, bool backwards);
+
+        void arcTurnNew(double degrees, double radius, double settlingTime, double timeout, bool backwards);
 
   
 
