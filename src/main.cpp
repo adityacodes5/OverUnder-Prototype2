@@ -152,10 +152,6 @@ void usercontrol(void) {
       pid.arcTurn(45, 20, 300, 2000, false);
     }
 
-    if(Controller1.ButtonA.pressing()){
-      driveAndTurnPID(24, 0, 100, 1000, 200);
-    }
-
     if(Controller1.ButtonY.pressing()){
       pid.turnFor(90, 200);//go to pole 
     }
