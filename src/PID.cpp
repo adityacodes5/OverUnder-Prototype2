@@ -143,9 +143,9 @@ void PID::moveFor(double inches, double settleTime = 300, double timeout = 4000,
         if (isSettled()){
             moveEnabled = false;
 
-            if(wings.value() == true){
-                wings.set(false);
-            }
+            // if(wings.value() == true){
+            //     wings.set(false);
+            // }
 
             if(outTakeAtEnd){
                 Intake.stop();
