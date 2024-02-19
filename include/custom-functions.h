@@ -16,6 +16,8 @@ extern void oldMoveInches(double inchesToTurn, double motorVelocity);
 extern void AWP();
 extern void PROG();
 extern void yes();
+extern void AWPclose();
+void driveAndTurnPID(double targetDistance, double targetAngle, int maxSpeed, int timeout, int settleTime);
 
 extern double timeElapsed(timeUnits units);
 extern void resetTimer();

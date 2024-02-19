@@ -10,7 +10,7 @@ extern motor GearboxRF;
 extern motor GearboxRB;
 extern motor GearboxLF;
 extern motor GearboxLB;
-//5.5 Watt
+//drive motors, 5.5 Watt 
 extern motor RightPush;
 extern motor LeftPush;
 
@@ -25,7 +25,7 @@ extern inertial gyroscope;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
- *
+ *  
  * This should be called at the start of your int main function.
  */
 void vexcodeInit(void);

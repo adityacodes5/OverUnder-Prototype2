@@ -1,4 +1,19 @@
 #include "vex.h"
+//#include <algorithm>
+//#include <cstdlib>
+#include <cmath>  // Include the cmath library for the exponential function
+
+template <typename T>
+T customMin(T a, T b) {
+    return (a < b) ? a : b;
+}
+
+template <typename T>
+T customMax(T a, T b) {
+    return (a > b) ? a : b;
+}
+
+
 //#include <iostream>
 using namespace std;
 PID pid(0,0,0,0,0);
@@ -72,6 +87,9 @@ double armAxisPCT;
 double armAxismV;
 
 double rightSpeed, leftSpeed;
+
+int maxSpeed = 100*120;
+
 
 double overrideMovement(double value1, double value2){ //Return greater value of two numbers (absolute value). Used for allowing only one stick to work at a time, taking the one with the greater value
 
@@ -754,43 +772,72 @@ void newMoveInches(int inchesToMove, int multiplierSpeed){
         vexDelay(deltaTime);
     
 
-    }
-
-
-    
+    }    
 }
 
-void AWP(){
+void AWPclose(){
     wings.set(true);
-        pid.moveFor(26, 300, 1300, true, 0);
-    wings.set(true);
-        pid.turnFor(-60, 200);
+    pid.moveFor(33, 300, 1300, true, 0);
+    wings.set(false);
     Intake.spin(forward, 100, percentUnits::pct);
-        pid.moveFor(20,300, 500, false, 1);
+    pid.turnFor(120, 200);
+    move(reverse, 100, 100);
+    vexDelay(500);// at the net
+    brakeDrive(coast);
     wings.set(false);
-        pid.moveFor(-7, 250, 300, false, 1); 
-        pid.turnFor(-90, 200);
-    //pid.moveFor(50, 500, 1500, false, 0);
-        pid.moveFor(20, 300, 700, false, 0);
-        pid.turnFor(30, 200);
-        pid.moveFor(30, 300, 900, false, 2);
-        pid.turnFor(70, 200);
+    
+    pid.moveFor(10, 250, 300, false, 1); 
+    pid.turnFor(100, 200);
+    pid.moveFor(20, 200, 1000, false, 0);
+    pid.turnFor(-45, 200);
     wings.set(true);
-        pid.moveFor(23, 300, 900, true, 2);
+    pid.moveFor(30, 200, 1000, true, 0);
     wings.set(true);
-        pid.turnFor(90, 200);
+    pid.turnFor(45, 200);
+    pid.moveFor(15, 200, 1000, true, 0);
     wings.set(true);
-        pid.moveFor(30, 300, 700, true, 1);
-    wings.set(false);
-        pid.moveFor(-25, 300, 800, false, 0);
-        pid.turnFor(90, 200);
-        pid.moveFor(30, 100, 1300, false, 0);
-        pid.turnFor(90, 200);
-    wings.set(true);
-    //pid.moveFor(1, 500, 1500, true, 0);
-    pid.moveFor(10, 700, 500, true, 0);
-    wings.set(true);
+
+    pid.turnFor(90, 200);
+    pid.moveFor(23, 200, 1000, false, 0);
+    pid.turnFor(-90, 200);
     move(fwd, 3, 3);
+
+}
+
+void AWP(){ //FINAL
+    wings.set(true);
+    pid.moveFor(26, 300, 1300, false, 0);
+    pid.turnFor(-60, 200);
+    grabTriball(100, true);;
+    move(fwd, 100, 100);
+    grabTriball(100, false);
+    vexDelay(500);
+    brakeDrive(coast);
+
+    pid.moveFor(-10, 250, 500, false, 1); 
+    pid.turnFor(-75, 200);
+    grabTriball(maxSpeed, false);
+
+        wings.set(true);
+    pid.arcTurn(70, 80, 300, 1200, false);// go to middle conner 
+    pid.turnFor(65, 300);
+    pid.moveFor(27, 200, 1000, false, 0); //go to middle triball
+
+        wings.set(true);
+    pid.turnFor(90, 300);
+    grabTriball(maxSpeed, false);
+    pid.moveFor(30, 300, 700, false, 1);//go to net 
+    pid.moveFor(-30, 300, 800, false, 0);
+    wings.set(false);
+
+
+    pid.turnFor(90, 200);//go to pole 
+    pid.moveFor(40, 100, 1300, false, 0);
+    pid.turnFor(90, 200);
+    pid.moveFor(10, 700, 500, false, 0);
+    move(fwd, 3, 3);
+    wings.set(true);
+
 }
 
 // void PROG(){
@@ -879,13 +926,6 @@ void PROG(){
     //pid.moveFor(-20, 200, 1500, true, 0);
     //Intake.spin(reverse, 100, percentUnits::pct);
     //    wings.set(true);
-
-}
-
-void yes(){
-pid.moveFor(1, 300, 3000, true, 0);
-pid.turnFor(70, 1000);
-pregameCalibrate();
 
 }
 

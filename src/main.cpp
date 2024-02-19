@@ -9,10 +9,11 @@
 #include "vex.h"
 
 using namespace vex;
+using namespace std;
+
 
 // A global instance of competition
 competition Competition;
-PID Pid(0, 0, 0, 0, 0);
 // define your global instances of motors and other devices here
 bool isCalibrated;
 
@@ -35,15 +36,15 @@ void autonomous(void) {
   }
   //closeSideAuton();
   //matchLoadAuton();
-  //yes();
   AWP();
+  //AWPclose();
   //PROG();
 }
 
 
 
 void usercontrol(void) {
-
+  PID pid(0,0,0,0,0);
   if(!isCalibrated){
     pregameCalibrate();
     isCalibrated = true;
@@ -148,15 +149,15 @@ void usercontrol(void) {
     }
 
     if(Controller1.ButtonB.pressing()){
-      Pid.arcTurn(45, 20, 300, 2000, false);
+      pid.arcTurn(45, 20, 300, 2000, false);
     }
 
     if(Controller1.ButtonA.pressing()){
-      //AWP();
+      driveAndTurnPID(24, 0, 100, 1000, 200);
     }
 
     if(Controller1.ButtonY.pressing()){
-      yes();
+      pid.turnFor(90, 200);//go to pole 
     }
 
     wait(5, msec);

@@ -244,7 +244,7 @@ void PID::arcTurn(double degrees, double radius, double settlingTime, double tim
                 gyroscope.setHeading(1, vex::rotationUnits::deg);
             }
             if(fabs(rightSpeed) >= 100){
-                rightSpeed = 100;
+                rightSpeed = 100;   
                 
             }
             leftSpeed = rightSpeed*((radius)/(radius+driveBase));
