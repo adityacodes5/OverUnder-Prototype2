@@ -149,7 +149,7 @@ void usercontrol(void) {
     }
 
     if(Controller1.ButtonB.pressing()){
-      pid.arcTurn(45, 20, 300, 2000, false);
+      yes();
     }
 
     if(Controller1.ButtonY.pressing()){

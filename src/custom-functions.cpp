@@ -792,10 +792,8 @@ void AWPclose(){
     pid.turnFor(-45, 200);
     wings.set(true);
     pid.moveFor(30, 200, 1000, true, 0);
-    wings.set(true);
     pid.turnFor(45, 200);
     pid.moveFor(15, 200, 1000, true, 0);
-    wings.set(true);
 
     pid.turnFor(90, 200);
     pid.moveFor(23, 200, 1000, false, 0);
@@ -804,45 +802,170 @@ void AWPclose(){
 
 }
 
-void AWP(){ //FINAL
-    pid.moveFor(-25, 300, 1300, true, 0);
-    wings.set(true);
-    pid.turnFor(-60, 200);
-    grabTriball(100, true);;
-    move(reverse, 100, 100);
-    grabTriball(100, false);
-    vexDelay(500);
+// void AWP(){
+//     pid.moveFor(-25, 200, 700, true, 0);
+//     pid.turnFor(-60, 100);
+//     wings.set(false);
+//     pid.turnFor(210, 200);
+//     pid.moveFor(23, 200, 700, false, 1);
+//     pid.moveFor(-12, 200, 1000, false, 0);
+//     pid.turnFor(-90, 200);
+//     pid.moveFor(53, 200, 1000, false, 2);
+//     pid.turnFor(75, 200);
+
+//     pid.moveFor(25, 200, 1000, false, 0);
+//     pid.turnFor(90, 200);
+//     wings.set(true);
+//     pid.moveFor(33, 200, 600, false, 1);
+//     wings.set(false);
+//     //pid.moveFor(-0, 200, 1000, false, 0);
+//     pid.turnFor(140, 200);
+//     pid.moveFor(60, 200, 700, false, 0);
+//     pid.turnFor(45, 200);
+//         wings.set(true);
+//     pid.moveFor(5, 200, 1000, false, 0);
+// }
+
+void AWP(){
+    grabTriball(12000, false);
+    pid.moveFor(4, 200, 1000, false, 0);
+    vexDelay(400);
+    move(reverse, 20, 20);
+    vexDelay(400);
+    pid.moveFor(-37, 200, 1000, false, 0);
+    pid.turnFor(-30, 200);
+    pid.moveFor(-20, 200, 1000, false, 0);
+        wings.set(true);
+    pid.turnFor(-50, 200);
+    pid.moveFor(-17, 200, 1000, false, 0);
     brakeDrive(coast);
-
     wings.set(false);
-    pid.moveFor(10, 250, 500, false, 1);
-    wings.set(false);
-    pid.turnFor(90, 200);
-    grabTriball(maxSpeed, false);
-
-        wings.set(false);
-    pid.arcTurn(70, 80, 300, 1200, false);// go to middle conner 
-    pid.turnFor(65, 300);
-        wings.set(true);
-
-    pid.moveFor(27, 200, 1000, false, 0); //go to middle triball
-
-        wings.set(true);
-    pid.turnFor(90, 300);
-    grabTriball(maxSpeed, false);
-    pid.moveFor(30, 300, 700, false, 1);//go to net 
-    pid.moveFor(-30, 300, 800, false, 0);
-    wings.set(false);
-
-
-    pid.turnFor(90, 200);//go to pole 
-    pid.moveFor(40, 100, 1300, false, 0);
-    pid.turnFor(90, 200);
-    pid.moveFor(10, 700, 500, false, 0);
-    move(fwd, 3, 3);
-    wings.set(true);
-
+    vexDelay(500);
+    pid.turnFor(180, 200);
+            pid.moveFor(-10, 200, 1000, false, 0);
+                    grabTriball(12000, true);
+    move(fwd, 30, 30);
+    vexDelay(1000);
+        pid.moveFor(-5, 200, 1000, false, 0);
+    pid.turnFor(-90, 200);
+    pid.moveFor(60, 200, 1000, false, 0);
+    brakeDrive(coast);
 }
+
+
+// void AWP(){
+//     grabTriball(12000, false);
+//     pid.moveFor(4, 200, 1000, false, 2);
+//     vexDelay(200);
+//     pid.moveFor(-40, 200, 1000, false, 0);
+//     pid.turnFor(-20, 200);
+//     pid.moveFor(-5, 200, 1000, false, 0);
+//     pid.moveFor(-30, 200, 1000, true, 0);
+//     pid.turnFor(-60, 200);
+//     // pid.moveFor(10, 200, 1000, false, 0);
+//     // wings.set(false);
+//     // pid.turnFor(250, 200);
+//     // //grabTriball(100, true);
+//     // move(fwd, 100, 100);
+//     // grabTriball(100, true);
+//     // vexDelay(500);
+//     // brakeDrive(coast);    
+// }
+
+
+
+
+// void AWP(){
+//     pid.turnFor(45, 100);
+//     vexDelay(300);
+//     pid.turnFor(-140, 100);
+//     pid.moveFor(30, 200, 2000, false, 0);
+//     pid.moveFor(-40, 200, 2000, false, 0);
+//     pid.turnFor(60, 100);
+//     pid.moveFor(20, 200, 2000, false, 0);
+//     pid.turnFor(-30, 200);
+//     pid.moveFor(25, 200, 2000, false, 0);
+//     pid.turnFor(60, 100);
+//     pid.moveFor(25, 200, 2000, false, 0);
+//     pid.turnFor(90, 200);
+//     pid.moveFor(30, 200, 2000, false, 0);
+//     pid.moveFor(-10, 200, 2000, false, 0);
+//     pid.turnFor(120, 200);
+//     pid.moveFor(45, 200, 2000, false, 0);
+//     pid.turnFor(60, 200);
+//     pid.moveFor(3, 200, 2000, false, 0);
+
+//  }
+// void AWP(){
+//     pid.turnFor(45, 200);
+//     grabTriball(12000, true);
+//     vexDelay(500);
+//     pid.turnFor(-45, 200);
+//         grabTriball(100, true);
+//     pid.moveFor(22, 200, 2000, false, 1);
+//     pid.turnFor(-70, 200);
+//     pid.moveFor(30, 200, 1000, false, 2);
+//     pid.turnFor(70, 200);
+//     pid.moveFor(20, 200, 1000, false, 0);
+//     pid.turnFor(90, 200);
+//     wings.set(true);
+//     pid.moveFor(30, 200, 1000, false, 2);
+//     pid.moveFor(-20, 200, 1000, false, 1);
+//     pid.turnFor(70, 200);
+//     pid.moveFor(60, 200, 1000, false, 0);
+//     pid.turnFor(110, 200);
+//     pid.moveFor(30, 200, 1000, false, 2);
+//     pid.moveFor(-30, 200, 1000, false, 2);
+//     pid.turnFor(-40, 200);
+//     pid.moveFor(-25, 200, 1000, false, 2);
+//     pid.turnFor(-40, 200);
+//     pid.moveFor(-15, 200, 1000, false, 2);
+//     pid.moveFor(10, 200, 1000, false, 2);
+//     pid.turnFor(-90, 200);
+//     pid.moveFor(50, 200, 1000, false, 2);
+// }
+// void AWP(){ //FINAL
+//     pid.moveFor(-25, 300, 1300, true, 0);
+//     pid.turnFor(-60, 200);
+//     pid.moveFor(-5, 200, 1000, false, 0);
+//     pid.moveFor(10, 200, 1000, false, 0);
+//     wings.set(false);
+//     pid.turnFor(250, 200);
+//     //grabTriball(100, true);
+//     move(fwd, 100, 100);
+//     grabTriball(100, true);
+//     vexDelay(500);
+//     brakeDrive(coast);
+
+    // wings.set(false);
+    // pid.moveFor(10, 250, 500, false, 1);
+    // wings.set(false);
+    // pid.turnFor(90, 200);
+    // grabTriball(maxSpeed, false);
+
+    //     wings.set(false);
+    // pid.arcTurn(70, 80, 300, 1200, false);// go to middle conner 
+    // pid.turnFor(65, 300);
+    //     wings.set(true);
+
+    // pid.moveFor(27, 200, 1000, false, 0); //go to middle triball
+
+    //     wings.set(true);
+    // pid.turnFor(90, 300);
+    // grabTriball(maxSpeed, false);
+    // pid.moveFor(30, 300, 700, false, 1);//go to net 
+    // pid.moveFor(-30, 300, 800, false, 0);
+    // wings.set(false);
+
+
+    // pid.turnFor(90, 200);//go to pole 
+    // pid.moveFor(40, 100, 1300, false, 0);
+    // pid.turnFor(90, 200);
+    // pid.moveFor(10, 700, 500, false, 0);
+    // move(fwd, 3, 3);
+    // wings.set(true);
+
+// }
 
 // void AWP(){ //FINAL
 //     pid.moveFor(-25, 300, 1300, true, 0);
@@ -962,4 +1085,9 @@ double motorValueR(){
 
 double motorValueL(){
     return (fabs(GearboxLF.position(rotationUnits::deg)) + fabs(GearboxLB.position(rotationUnits::deg)))/2;
+}
+
+void yes(){
+        pid.turnFor(60, 200);
+
 }
