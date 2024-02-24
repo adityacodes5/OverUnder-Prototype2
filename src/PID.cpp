@@ -304,3 +304,62 @@ void PID::arcTurnNew(double degrees, double radius, double settlingTime, double 
         vexDelay(deltaTime);
     }
 }
+
+void PID::moveForPrecise(double inches, double settleTime = 300, double timeout = 4000, bool openWingsHalfway = false, int outTakeAtEnd = false, double settleDistance = 0.5){
+    setValues(inches, 0.16, 0.2, 2, 15, settleDistance, settleTime, timeout); //Please test and tune these values as required. Set P, I, and D values
+    moveEnabled = true;
+    if (inches < 5){
+        kP = 3;
+        kI = 0;
+        kD = 0;
+    }
+    originalDegrees = ((inches * 360) / (wheelCircumference * gearRatio));
+
+    while(moveEnabled){
+        if(inches>=0){
+            degreesError = ((inches * 360) / (wheelCircumference * gearRatio)) - calculateAverageMotorRotation();
+        }
+
+        if(inches<0){
+            degreesError = ((inches * 360) / (wheelCircumference * gearRatio)) + calculateAverageMotorRotation();
+        }
+        
+        if(openWingsHalfway){
+            if((fabs(degreesError) < fabs(originalDegrees/2)) && wings.value() == false){
+                wings.set(true);
+            }
+        }
+
+        if(outTakeAtEnd == 1){
+            if(timeSpentRunning < 500){
+                Intake.spin(reverse, 100, percentUnits::pct);
+            }
+        }
+
+        if(outTakeAtEnd == 2){
+            if(timeSpentRunning < 500){
+                Intake.spin(forward, 100, percentUnits::pct);
+            }
+        }
+        motorSpeed = compute(degreesError);
+        move(fwd, motorSpeed, motorSpeed);
+
+        if (isSettled()){
+            moveEnabled = false;
+
+            // if(wings.value() == true){
+            //     wings.set(false);
+            // }
+
+            if(outTakeAtEnd){
+                Intake.stop();
+            }
+
+            break;
+        }
+
+        vexDelay(deltaTime);
+    }
+
+
+}

@@ -36,9 +36,11 @@ void autonomous(void) {
   }
   //closeSideAuton();
   //matchLoadAuton();
-  AWP();
+  //AWP();
   //AWPclose();
   //PROG();
+  provsCloseSide(); // WWWWWW AUTON
+  //provsFarSide(); // LLLLL AUTON
 }
 
 
@@ -148,13 +150,6 @@ void usercontrol(void) {
       }
     }
 
-    if(Controller1.ButtonB.pressing()){
-      yes();
-    }
-
-    if(Controller1.ButtonY.pressing()){
-      pid.turnFor(90, 200);//go to pole 
-    }
 
     wait(5, msec);
   }

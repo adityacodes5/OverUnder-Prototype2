@@ -36,4 +36,6 @@ extern void newTurn(double targetAngle, double speed);
 extern void newMoveInches(int inchesToMove,int multiplierSpeed);
 double motorValueR();
 double motorValueL();
+void provsCloseSide();
+void provsFarSide();
 

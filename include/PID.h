@@ -58,6 +58,8 @@ class PID{
 
         void arcTurnNew(double degrees, double radius, double settlingTime, double timeout, bool backwards);
 
+        void moveForPrecise(double inches, double settleTime , double timeout, bool openWingsHalfway, int outTakeAtEnd, double settleDistance);
+
   
 
 

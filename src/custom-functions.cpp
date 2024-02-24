@@ -1091,3 +1091,42 @@ void yes(){
         pid.turnFor(60, 200);
 
 }
+
+void provsCloseSide(){
+    move(directionType::rev, 60, 80);
+    vexDelay(1200);
+    brakeDrive(coast);
+    move(directionType::fwd, 40, 40);
+    wait(300, msec);
+    move(directionType::rev, 80, 80);
+    wait(500,msec);
+    brakeDrive(coast);
+    pid.moveFor(10, 200, 1500, false, false);
+    pid.turnFor(-35, 200);
+    pid.moveFor(10, 200, 1500, false, false);
+    pid.turnFor(180, 200);
+    pid.moveFor(-13, 200, 1500, true, false);
+    pid.turnFor(-55, 200);
+    pid.turnFor(30, 200);
+    pid.moveFor(-3, 250, 1500, false, false);
+    wings.set(false);
+    pid.turnFor(-205, 400);
+    Intake.spin(reverse, 100, percent);
+    pid.moveForPrecise(35, 500, 1500, false, false, 0.5);
+    brakeDrive(brake);
+}
+
+void provsFarSide(){
+    pid.moveFor(-10, 200, 1500, true, false);
+    pid.turnFor(-45, 200);
+    pid.turnFor(20, 200);
+    wings.set(false);
+    pid.moveFor(-20, 250, 1500, false, false);
+    move(directionType::fwd, 50, 50);
+    vexDelay(300);
+    move(directionType::rev, 80, 80);
+    vexDelay(500);
+    brakeDrive(coast);
+
+
+}
